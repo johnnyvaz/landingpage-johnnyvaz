@@ -1,0 +1,149 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { supabase } from '../lib/supabase';
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  
+  const answers = {
+    resposta1: formData.get('resposta1'),
+    resposta3: formData.get('resposta3')
+  };
+
+  const { error } = await supabase
+    .from('quiz_responses')
+    .insert([
+      {
+        name: formData.get('nome'),
+        email: formData.get('email'),
+        whatsapp: formData.get('whatsapp'),
+        answers
+      }
+    ]);
+
+  if (error) {
+    console.error('Error:', error);
+  }
+
+  return Astro.redirect('/obrigado');
+}
+---
+
+<Layout title="Quiz">
+  <main class="min-h-screen bg-light p-4">
+    <form method="POST" class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6 mt-10 space-y-8">
+      <!-- Primeira Pergunta -->
+      <div>
+        <img 
+          src="http://dermatosaude.com.br/wp-content/uploads/2016/02/produto-cosmetico-capa-1.jpg" 
+          alt="Questão 1" 
+          class="w-full h-48 object-cover rounded-lg mb-4"
+        />
+        
+        <div class="relative w-full aspect-video mb-4 rounded-lg overflow-hidden">
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/lXndqTNf8TM?autoplay=1&controls=1&mute=0"
+            title="YouTube video"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="absolute top-0 left-0 w-full h-full"
+          ></iframe>
+        </div>
+        
+        <h2 class="text-xl font-bold mb-4 text-dark">Qual é a capital do Brasil?</h2>
+        
+        <div class="space-y-2">
+          <label class="flex items-center space-x-2">
+            <input type="radio" name="resposta1" value="rio" class="form-radio text-accent1" required>
+            <span class="text-dark">Rio de Janeiro</span>
+          </label>
+          
+          <label class="flex items-center space-x-2">
+            <input type="radio" name="resposta1" value="brasilia" class="form-radio text-accent1">
+            <span class="text-dark">Brasília</span>
+          </label>
+          
+          <label class="flex items-center space-x-2">
+            <input type="radio" name="resposta1" value="saopaulo" class="form-radio text-accent1">
+            <span class="text-dark">São Paulo</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Dados Pessoais -->
+      <div class="border-t pt-8">
+        <h2 class="text-xl font-bold mb-6 text-dark">Seus Dados</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-dark mb-1">Nome</label>
+            <input 
+              type="text" 
+              name="nome" 
+              required
+              class="w-full px-3 py-2 border border-accent2/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent1"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-dark mb-1">WhatsApp</label>
+            <input 
+              type="tel" 
+              name="whatsapp" 
+              required
+              class="w-full px-3 py-2 border border-accent2/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent1"
+            >
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-dark mb-1">E-mail</label>
+            <input 
+              type="email" 
+              name="email" 
+              required
+              class="w-full px-3 py-2 border border-accent2/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent1"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Segunda Pergunta -->
+      <div class="border-t pt-8">
+        <img 
+          src="http://dermatosaude.com.br/wp-content/uploads/2016/02/produto-cosmetico-capa-1.jpg" 
+          alt="Questão 2" 
+          class="w-full h-48 object-cover rounded-lg mb-4"
+        />
+        
+        <h2 class="text-xl font-bold mb-4 text-dark">Qual é o elemento mais abundante na Terra?</h2>
+        
+        <div class="space-y-2">
+          <label class="flex items-center space-x-2">
+            <input type="radio" name="resposta3" value="oxigenio" class="form-radio text-accent1" required>
+            <span class="text-dark">Oxigênio</span>
+          </label>
+          
+          <label class="flex items-center space-x-2">
+            <input type="radio" name="resposta3" value="ferro" class="form-radio text-accent1">
+            <span class="text-dark">Ferro</span>
+          </label>
+          
+          <label class="flex items-center space-x-2">
+            <input type="radio" name="resposta3" value="silicio" class="form-radio text-accent1">
+            <span class="text-dark">Silício</span>
+          </label>
+        </div>
+      </div>
+      
+      <button 
+        type="submit"
+        class="w-full bg-accent-gradient text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity"
+      >
+        Enviar Respostas
+      </button>
+    </form>
+  </main>
+</Layout>
